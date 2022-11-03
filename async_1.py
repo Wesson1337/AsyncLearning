@@ -15,5 +15,3 @@ if __name__ == '__main__':
     next(g)
     next(g)
     g.send(2)
-
-
