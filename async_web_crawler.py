@@ -8,7 +8,7 @@ from bs4 import BeautifulSoup
 
 logger = logging.getLogger(logging.basicConfig(level=logging.INFO))
 
-URL = 'https://youtube.com/'
+URL = 'https://okcalc.com/ru/'
 FILE_PATH = 'links/link'
 
 
@@ -27,36 +27,32 @@ async def get_data_from_url(url: str) -> str:
     return data
 
 
-async def get_third_party_links_from_html(data: str) -> list[str]:
+async def get_third_party_links_from_html(data: str, url: str) -> list[str]:
     soup = BeautifulSoup(data, 'html.parser')
-    links = []
-    host_name = urlparse(URL).hostname
+    links = set()
+    host_name = urlparse(url).hostname
+    scheme = urlparse(url).scheme
     for raw_link in soup.find_all('a'):
         link = raw_link.get('href')
-        if link and link.startswith('http') and host_name not in link:
-            links.append(link)
-    return links
-
-
-async def get_links_from_file():
-    async with aiofiles.open(FILE_PATH, mode='r') as f:
-        file_data = await f.read()
-        links = file_data.split('\n')
-        return links
+        if link:
+            if link.startswith('/'):
+                link = f'{scheme}://{host_name}{link}'
+            elif not link.startswith('http'):
+                link = URL
+            links.add(link)
+    return list(links)
 
 
 async def write_links_to_file(links: list[str]):
-    links_in_file = await get_links_from_file()
     async with aiofiles.open(FILE_PATH, mode='a') as f:
         for link in links:
-            if link not in links_in_file:
-                await f.write(link + '\n')
+            await f.write(link + '\n')
 
 
 async def get_third_party_links_from_website(url):
     try:
         data = await get_data_from_url(url)
-        links = await get_third_party_links_from_html(data)
+        links = await get_third_party_links_from_html(data, url)
         await write_links_to_file(links)
         return links
     except Exception as e:
@@ -72,13 +68,14 @@ async def main(iterations: int):
         for link in links:
             task = asyncio.create_task(get_third_party_links_from_website(link))
             tasks.append(task)
-        links = []
-        for test_links in await asyncio.gather(*tasks):
-            links.extend(test_links)
+        result = await asyncio.gather(*tasks)
+        links = set()
+        for test_links in result:
+            for link in test_links:
+                links.add(link)
     logger.info(time.time() - start)
 
 
 if __name__ == '__main__':
-    asyncio.run(main(3))
+    asyncio.run(main(4))
     clear_repeating_links()
-
