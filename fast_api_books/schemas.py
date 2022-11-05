@@ -4,7 +4,7 @@ from typing import Optional
 from pydantic import BaseModel
 
 
-class Receipt(BaseModel):
+class BaseReceiptSchema(BaseModel):
     title: str
     views_counter: int
     ingredients: str
@@ -12,3 +12,11 @@ class Receipt(BaseModel):
     cooking_time: int
     created: Optional[datetime]
     updated: Optional[datetime]
+
+
+class ReceiptSchemaIn(BaseReceiptSchema):
+    ...
+
+
+class ReceiptSchemaOut(BaseReceiptSchema):
+    id: str

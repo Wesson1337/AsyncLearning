@@ -7,7 +7,7 @@ from database import Base
 
 class Receipt(Base):
     __tablename__ = 'Receipt'
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, autoincrement=True, primary_key=True)
     title = Column(String(100))
     views_counter = Column(Integer)
     ingredients = Column(String(255))
