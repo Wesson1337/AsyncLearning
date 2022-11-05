@@ -1,7 +1,8 @@
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from fast_api_books.models import Receipt
+from models import Receipt
+from schemas import ReceiptSchemaIn
 
 
 async def get_all_receipts_from_db(session: AsyncSession) -> list[Receipt]:
@@ -12,4 +13,9 @@ async def get_all_receipts_from_db(session: AsyncSession) -> list[Receipt]:
     )
     return result.scalars().all()
 
-async def create_new_receipt(session: AsyncSession) -> Receipt:
+
+async def create_new_receipt_db(receipt: ReceiptSchemaIn, session: AsyncSession) -> Receipt:
+    new_receipt = Receipt(**receipt.dict())
+    session.add(new_receipt)
+    await session.commit()
+    return new_receipt
