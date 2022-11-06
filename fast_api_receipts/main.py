@@ -1,6 +1,6 @@
 from typing import List, Literal
 
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from database import init_db
@@ -36,7 +36,8 @@ async def create_receipt(
     return new_receipt
 
 
-@app.get('/receipts/{pk}', response_model=ReceiptSchemaOut)
+@app.get('/receipts/{pk}', response_model=ReceiptSchemaOut,
+         responses={404: {"detail": "Not found"}})
 async def get_certain_receipt(
         pk: int,
         session: AsyncSession = Depends(get_async_session)

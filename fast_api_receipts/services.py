@@ -1,6 +1,7 @@
 from datetime import datetime
 from typing import Literal
 
+from fastapi import HTTPException
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -26,6 +27,8 @@ async def create_new_receipt_db(receipt: ReceiptSchemaIn, session: AsyncSession)
 
 async def get_certain_receipt_db(pk: int, session: AsyncSession) -> Receipt:
     receipt = await session.get(Receipt, {'id': pk})
+    if not receipt:
+        raise HTTPException(status_code=404, detail='Receipt is not found')
     await increment_views_counter(receipt, session)
     return receipt
 
@@ -37,7 +40,14 @@ async def increment_views_counter(receipt: Receipt, session: AsyncSession) -> No
 
 async def patch_receipt_db(pk: int, receipt: ReceiptSchemaPatch, session: AsyncSession) -> Receipt:
     receipt_data = receipt.dict(exclude_unset=True)
+
+    if not receipt_data:
+        raise HTTPException(status_code=400, detail='Add at least 1 valid field to patch')
+
     stored_receipt = await session.get(Receipt, {'id': pk})
+
+    if not stored_receipt:
+        raise HTTPException(status_code=404, detail='Receipt is not found')
 
     for k, v in receipt_data.items():
         if k and v:
@@ -51,9 +61,8 @@ async def patch_receipt_db(pk: int, receipt: ReceiptSchemaPatch, session: AsyncS
 
 async def delete_receipt_db(pk: int, session: AsyncSession) -> dict[Literal["message"], str]:
     receipt = await session.get(Receipt, {'id': pk})
-    if receipt:
-        await session.delete(receipt)
-        await session.commit()
-        return {"message": "done"}
-    else:
-        return {"message": "receipt doesn't exists"}
+    if not receipt:
+        raise HTTPException(status_code=404, detail='Receipt is not found')
+    await session.delete(receipt)
+    await session.commit()
+    return {"message": "done"}
