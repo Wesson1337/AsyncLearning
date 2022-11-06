@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Optional
 
 from pydantic import BaseModel
 
@@ -15,6 +16,13 @@ class BaseReceiptSchema(BaseModel):
 
 class ReceiptSchemaIn(BaseReceiptSchema):
     ...
+
+
+class ReceiptSchemaPatch(BaseReceiptSchema):
+    title: Optional[str]
+    ingredients: Optional[str]
+    description: Optional[str]
+    cooking_time: Optional[int]
 
 
 class ReceiptSchemaOut(BaseReceiptSchema):

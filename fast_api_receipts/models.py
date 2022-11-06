@@ -14,4 +14,4 @@ class Receipt(Base):
     description = Column(Text)
     cooking_time = Column(Integer)
     created = Column(DateTime, default=datetime.now(), nullable=False)
-    updated = Column(DateTime, default=datetime.now(), default_factory=datetime.utcnow, nullable=False)
+    updated = Column(DateTime, default=datetime.now(), nullable=False)
