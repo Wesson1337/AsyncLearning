@@ -5,8 +5,8 @@ from sqlalchemy import Column, Integer, String, Text, DateTime
 from database import Base
 
 
-class Receipt(Base):
-    __tablename__ = 'Receipt'
+class Recipe(Base):
+    __tablename__ = 'Recipe'
     id = Column(Integer, autoincrement=True, primary_key=True)
     title = Column(String(100))
     views_counter = Column(Integer, default=0)
