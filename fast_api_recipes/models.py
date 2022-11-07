@@ -2,7 +2,7 @@ from datetime import datetime
 
 from sqlalchemy import Column, Integer, String, Text, DateTime
 
-from database import Base
+from fast_api_recipes.database import Base
 
 
 class Recipe(Base):

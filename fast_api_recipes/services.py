@@ -5,8 +5,8 @@ from fastapi import HTTPException
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from models import Recipe
-from schemas import RecipeSchemaIn, RecipeSchemaPatch
+from fast_api_recipes.models import Recipe
+from fast_api_recipes.schemas import RecipeSchemaIn, RecipeSchemaPatch
 
 
 async def get_all_recipes_db(session: AsyncSession) -> list[Recipe]:
