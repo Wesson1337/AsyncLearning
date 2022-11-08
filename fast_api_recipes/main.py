@@ -1,15 +1,22 @@
+import os
 from typing import List, Literal
 
 from fastapi import FastAPI, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from fast_api_recipes.database import init_db
+from fast_api_recipes.models import init_db
 from fast_api_recipes.dependencies import get_async_session
 from fast_api_recipes.schemas import RecipeSchemaOut, RecipeSchemaIn, RecipeSchemaPatch
 from fast_api_recipes.services import get_all_recipes_db, create_new_recipe_db, get_certain_recipe_db, \
     patch_recipe_db, delete_recipe_db
 
-app = FastAPI()
+
+def get_app(testing: bool = False) -> FastAPI:
+    os.environ['TESTING'] = str(testing)
+    return FastAPI()
+
+
+app = get_app()
 
 
 @app.on_event("startup")
