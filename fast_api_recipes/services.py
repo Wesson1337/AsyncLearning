@@ -10,11 +10,9 @@ from fast_api_recipes.schemas import RecipeSchemaIn, RecipeSchemaPatch
 
 
 async def get_all_recipes_db(session: AsyncSession) -> list[Recipe]:
-    result = await session.execute(select(Recipe).order_by(
-        Recipe.views_counter.desc()
-    ).order_by(
-        Recipe.cooking_time)
-    )
+    result = await session.execute(select(Recipe).
+                                   order_by(Recipe.views_counter.desc()).
+                                   order_by(Recipe.cooking_time))
     return result.scalars().all()
 
 

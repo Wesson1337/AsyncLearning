@@ -1,13 +1,13 @@
 from typing import List, Literal
 
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import FastAPI, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from fast_api_recipes.database import init_db
 from fast_api_recipes.dependencies import get_async_session
 from fast_api_recipes.schemas import RecipeSchemaOut, RecipeSchemaIn, RecipeSchemaPatch
-from fast_api_recipes.services import get_all_recipes_db, create_new_recipe_db, get_certain_recipe_db, patch_recipe_db, \
-    delete_recipe_db
+from fast_api_recipes.services import get_all_recipes_db, create_new_recipe_db, get_certain_recipe_db, \
+    patch_recipe_db, delete_recipe_db
 
 app = FastAPI()
 
@@ -22,8 +22,8 @@ async def get_all_recipes(
         session: AsyncSession = Depends(get_async_session)
 ) -> list[RecipeSchemaOut]:
 
-    recipess = await get_all_recipes_db(session)
-    return recipess
+    recipes = await get_all_recipes_db(session)
+    return recipes
 
 
 @app.post('/recipes', response_model=RecipeSchemaOut)
