@@ -11,12 +11,7 @@ from fast_api_recipes.services import get_all_recipes_db, create_new_recipe_db, 
     patch_recipe_db, delete_recipe_db
 
 
-def get_app(testing: bool = False) -> FastAPI:
-    os.environ['TESTING'] = str(testing)
-    return FastAPI()
-
-
-app = get_app()
+app = FastAPI()
 
 
 @app.on_event("startup")

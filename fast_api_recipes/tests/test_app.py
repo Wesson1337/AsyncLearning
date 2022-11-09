@@ -1,13 +1,10 @@
-from fastapi.testclient import TestClient
+import pytest
+from fast_api_recipes.tests.conftest import PAYLOAD_DATA
 
-from fast_api_recipes.main import get_app
-
-app = get_app(testing=True)
-
-client = TestClient(app)
+pytestmark = pytest.mark.asyncio
 
 
-def test_main():
-    response = client.get('/recipes')
+async def test_get_recipes(client):
+    response = await client.get('/recipes')
     assert response.status_code == 200
-
+    assert response.read() == PAYLOAD_DATA
