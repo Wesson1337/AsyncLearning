@@ -28,7 +28,7 @@ async def get_all_recipes(
     return recipes
 
 
-@app.post('/recipes', response_model=RecipeSchemaOut)
+@app.post('/recipes', response_model=RecipeSchemaOut, status_code=201)
 async def create_recipe(
         recipe: RecipeSchemaIn,
         session: AsyncSession = Depends(get_async_session)

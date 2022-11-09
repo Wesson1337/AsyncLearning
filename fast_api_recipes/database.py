@@ -12,5 +12,3 @@ engine = create_async_engine(
 async_session = sessionmaker(bind=engine, expire_on_commit=False, class_=AsyncSession)
 
 Base = declarative_base(engine)
-
-from fast_api_recipes.models import Recipe

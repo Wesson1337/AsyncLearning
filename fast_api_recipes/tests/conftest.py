@@ -43,6 +43,7 @@ async def db_engine() -> AsyncEngine:
         SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
     )
     yield engine
+    await engine.dispose()
 
 
 @pytest_asyncio.fixture()
