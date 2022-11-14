@@ -71,3 +71,4 @@ x = defaultdict()
 x['key'] = 10
 
 print(x['key'], x['list'])
+print(x['list'])
